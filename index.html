@@ -13,7 +13,10 @@
   <body>
     <div id="app">
       <header class="hero">
-        <p class="eyebrow">Invoice Toolkit</p>
+        <div class="eyebrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><path d="M4 14.71 14 3 11 10h7L10 21l3-7z"/></svg>
+          Invoice Toolkit
+        </div>
         <h1>PDF 转图片</h1>
         <p class="hero-desc">
           支持批量上传、逐文件进度、单独下载与一键打包下载。全部转换在浏览器本地完成。
@@ -29,41 +32,63 @@
           tabindex="0"
         >
           <input id="fileInput" type="file" accept="application/pdf" multiple />
+          <div class="dropzone-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload-cloud"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+          </div>
           <p class="dropzone-title">拖拽 PDF 到这里，或点击选择文件</p>
           <p class="dropzone-sub">可一次上传多个 PDF 文件</p>
         </section>
 
         <section class="controls">
-          <label>
-            清晰度
+          <div class="control-group">
+            <label for="scaleSelect">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize-2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+              清晰度
+            </label>
             <select id="scaleSelect">
               <option value="1.5">标准 (1.5x)</option>
               <option value="2" selected>高清 (2x)</option>
               <option value="2.5">超清 (2.5x)</option>
               <option value="3">极清 (3x)</option>
             </select>
-          </label>
-          <label>
-            JPG 质量
-            <input
-              id="qualityRange"
-              type="range"
-              min="75"
-              max="100"
-              value="92"
-              step="1"
-            />
-            <span id="qualityValue">92%</span>
-          </label>
-          <button id="convertBtn" class="btn-primary" disabled>开始转换</button>
-          <button id="downloadAllBtn" class="btn-secondary" disabled>
-            打包下载全部
-          </button>
-          <button id="clearBtn" class="btn-ghost" disabled>清空任务</button>
+          </div>
+
+          <div class="control-group">
+            <label for="qualityRange">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              JPG 质量
+            </label>
+            <div class="range-container">
+              <input
+                id="qualityRange"
+                type="range"
+                min="75"
+                max="100"
+                value="92"
+                step="1"
+              />
+              <span id="qualityValue">92%</span>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="convertBtn" class="btn-primary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+              开始转换
+            </button>
+            <button id="downloadAllBtn" class="btn-secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              打包下载全部
+            </button>
+            <button id="clearBtn" class="btn-ghost" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+              清空
+            </button>
+          </div>
         </section>
 
         <section class="summary" id="summary">
-          <span>未添加任务</span>
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> 未添加任务</span>
         </section>
 
         <section id="taskList" class="task-list"></section>

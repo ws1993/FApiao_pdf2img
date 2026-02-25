@@ -374,11 +374,11 @@ function renderSummary() {
   const pending = state.tasks.filter((task) => task.status === "pending").length;
 
   dom.summary.innerHTML = `
-    <span>总任务: <strong>${total}</strong></span>
-    <span>待转换: <strong>${pending}</strong></span>
-    <span>转换中: <strong>${running}</strong></span>
-    <span>完成: <strong>${done}</strong></span>
-    <span>失败: <strong>${failed}</strong></span>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg> 总任务: <strong>${total}</strong></span>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 待转换: <strong>${pending}</strong></span>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> 转换中: <strong>${running}</strong></span>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> 完成: <strong>${done}</strong></span>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg> 失败: <strong>${failed}</strong></span>
   `;
 }
 
@@ -389,7 +389,7 @@ function renderTaskList() {
   }
 
   dom.taskList.innerHTML = state.tasks
-    .map((task) => {
+    .map((task, index) => {
       const preview = task.images
         .slice(0, 4)
         .map(
@@ -405,7 +405,8 @@ function renderTaskList() {
                   data-task-id="${task.id}"
                   data-image-index="${index}"
                 >
-                  下载本页
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-p"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  下载
                 </button>
               </figcaption>
             </figure>
@@ -418,7 +419,7 @@ function renderTaskList() {
       const safeName = escapeHtml(task.file.name);
 
       return `
-        <article class="task-card">
+        <article class="task-card" style="animation-delay: ${index * 0.08}s">
           <div class="task-top">
             <div>
               <h3 title="${safeName}">${safeName}</h3>
@@ -434,11 +435,10 @@ function renderTaskList() {
             <span class="progress-text">${task.progress}% (${task.processedPages}/${task.totalPages || 0})</span>
           </div>
 
-          ${
-            task.error
-              ? `<p class="error-text">转换失败: ${escapeHtml(task.error)}</p>`
-              : ""
-          }
+          ${task.error
+          ? `<p class="error-text">转换失败: ${escapeHtml(task.error)}</p>`
+          : ""
+        }
 
           <div class="task-actions">
             <button
@@ -448,17 +448,16 @@ function renderTaskList() {
               data-task-id="${task.id}"
               ${task.status !== "done" || !task.images.length || task.zipping ? "disabled" : ""}
             >
-              ${task.zipping ? "打包中..." : "下载该 PDF"}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+              ${task.zipping ? "打包中..." : "打包下载 (ZIP)"}
             </button>
           </div>
 
-          ${
-            preview
-              ? `<div class="preview-grid">${preview}</div>${
-                  moreCount ? `<p class="more-pages">另有 ${moreCount} 页可在打包内下载</p>` : ""
-                }`
-              : ""
-          }
+          ${preview
+          ? `<div class="preview-grid">${preview}</div>${moreCount ? `<p class="more-pages">另有 ${moreCount} 页可在打包内下载</p>` : ""
+          }`
+          : ""
+        }
         </article>
       `;
     })
@@ -471,12 +470,17 @@ function renderButtons() {
   const hasDone = state.tasks.some((task) => task.status === "done" && task.images.length > 0);
 
   dom.convertBtn.disabled = state.running || !hasPending;
-  dom.convertBtn.textContent = state.running ? "转换中..." : "开始转换";
+  dom.convertBtn.innerHTML = state.running
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2 animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> 转换中...`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="6 3 20 12 6 21 6 3"/></svg> 开始转换`;
 
   dom.downloadAllBtn.disabled = state.running || !hasDone || state.downloadingAll;
-  dom.downloadAllBtn.textContent = state.downloadingAll ? "打包中..." : "打包下载全部";
+  dom.downloadAllBtn.innerHTML = state.downloadingAll
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2 animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> 打包中...`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 打包下载全部`;
 
   dom.clearBtn.disabled = state.running || !hasTasks;
+  dom.clearBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg> 清空`;
 }
 
 function triggerDownload(blob, fileName) {
