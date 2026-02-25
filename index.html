@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF 转图片</title>
+    <meta
+      name="description"
+      content="支持批量上传 PDF，逐文件显示转换进度，并支持单独与打包下载。"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="hero">
+        <p class="eyebrow">Invoice Toolkit</p>
+        <h1>PDF 转图片</h1>
+        <p class="hero-desc">
+          支持批量上传、逐文件进度、单独下载与一键打包下载。全部转换在浏览器本地完成。
+        </p>
+      </header>
+
+      <main class="panel">
+        <section
+          class="dropzone"
+          id="dropzone"
+          role="button"
+          aria-label="上传 PDF"
+          tabindex="0"
+        >
+          <input id="fileInput" type="file" accept="application/pdf" multiple />
+          <p class="dropzone-title">拖拽 PDF 到这里，或点击选择文件</p>
+          <p class="dropzone-sub">可一次上传多个 PDF 文件</p>
+        </section>
+
+        <section class="controls">
+          <label>
+            清晰度
+            <select id="scaleSelect">
+              <option value="1.5">标准 (1.5x)</option>
+              <option value="2" selected>高清 (2x)</option>
+              <option value="2.5">超清 (2.5x)</option>
+              <option value="3">极清 (3x)</option>
+            </select>
+          </label>
+          <label>
+            JPG 质量
+            <input
+              id="qualityRange"
+              type="range"
+              min="75"
+              max="100"
+              value="92"
+              step="1"
+            />
+            <span id="qualityValue">92%</span>
+          </label>
+          <button id="convertBtn" class="btn-primary" disabled>开始转换</button>
+          <button id="downloadAllBtn" class="btn-secondary" disabled>
+            打包下载全部
+          </button>
+          <button id="clearBtn" class="btn-ghost" disabled>清空任务</button>
+        </section>
+
+        <section class="summary" id="summary">
+          <span>未添加任务</span>
+        </section>
+
+        <section id="taskList" class="task-list"></section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script defer src="/src/main.js"></script>
+  </body>
+</html>
